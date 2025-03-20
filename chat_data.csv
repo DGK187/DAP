@@ -1,0 +1,22 @@
+import pandas as pd
+
+# Sample dataset
+data = {
+    "message": [
+        "Hey, how old are you?", 
+        "Let's meet in private.", 
+        "Hi, how's your day?", 
+        "Where do you go to school?",
+        "You can trust me, don’t tell anyone.",
+        "What’s your favorite video game?"
+    ],
+    "label": ["grooming", "grooming", "non-grooming", "grooming", "grooming", "non-grooming"]
+}
+
+# Convert to DataFrame
+df = pd.DataFrame(data)
+
+# Save to CSV
+df.to_csv("chat_data.csv", index=False)
+
+print("Sample chat_data.csv created!")

@@ -18,7 +18,18 @@ nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 nltk.download('wordnet')
 
-# Load dataset (replace with actual file path)
+# Create a sample dataset if it doesn't exist
+data = {
+    "message": ["Hey, how old are you?", "Let's meet in private.", "Hi, how's your day?", "Where do you go to school?"],
+    "label": ["grooming", "grooming", "non-grooming", "grooming"]
+}
+
+df = pd.DataFrame(data)
+df.to_csv("chat_data.csv", index=False)
+
+print("Sample chat_data.csv created!")
+
+# Load dataset
 df = pd.read_csv('chat_data.csv')  # Ensure the dataset has 'message' and 'label' columns
 
 # Preprocessing function
