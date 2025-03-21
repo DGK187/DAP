@@ -57,7 +57,7 @@ The goal isn't surveillance; it's safety. Not restriction, but rather responsibl
 
 Guardian Pro is designed to be installed on your child's devices with their knowledge and age-appropriate understanding. The parent dashboard can be accessed securely from any device, keeping you connected to your child's digital experience no matter where life takes you.
 
-## Join Us in Protecting Childhood
+## Join me in Protecting Childhood
 
 In a world where technology evolves daily, our commitment to childhood safety must be unwavering. Guardian Pro represents not just software, but a statement that in the digital age, our children's safety remains our highest priority.
 
