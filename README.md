@@ -4,7 +4,7 @@
 
 In today's hyperconnected world, our children navigate digital landscapes we could never have imagined in our own youth. Every swipe, click, and message opens doors to both wonder and worry. Guardian Pro was born from a simple yet profound belief: that we can embrace technology's benefits while shielding our children from its darkest corners.
 
-## Our Mission
+## My Mission
 
 Guardian Pro exists to preserve the innocence of childhood in the digital era. We believe that children deserve to explore, learn, and connect online with the same safety and security they would experience in their own backyard under a parent's watchful eye.
 
