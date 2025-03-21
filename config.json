@@ -1,0 +1,57 @@
+{
+    "database": {
+        "path": "data/monitoring.db"
+    },
+    "model": {
+        "path": "models/grooming_detector.pkl",
+        "training_data": "data/chat_data.csv",
+        "retrain_interval_days": 30
+    },
+    "alerts": {
+        "min_risk_threshold": 0.7,
+        "contact_risk_threshold": 0.6,
+        "alert_cooldown_hours": 24
+    },
+    "logging": {
+        "level": "INFO",
+        "file": "logs/app.log"
+    },
+    "monitoring": {
+        "scan_interval_minutes": 15,
+        "max_messages_per_scan": 100
+    },
+    "platforms": {
+        "sms": {
+            "enabled": true
+        },
+        "whatsapp": {
+            "enabled": true
+        },
+        "instagram": {
+            "enabled": true
+        },
+        "snapchat": {
+            "enabled": false
+        },
+        "facebook": {
+            "enabled": true
+        },
+        "tiktok": {
+            "enabled": false
+        }
+    },
+    "notification": {
+        "email": {
+            "enabled": true,
+            "smtp_server": "smtp.example.com",
+            "smtp_port": 587,
+            "use_tls": true,
+            "username": "alerts@example.com",
+            "from_address": "alerts@example.com"
+        },
+        "push": {
+            "enabled": false,
+            "service": "firebase"
+        }
+    }
+}

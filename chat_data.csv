@@ -1,22 +1,222 @@
 import pandas as pd
+import random
+from datetime import datetime, timedelta
 
-# Sample dataset
+# Create a more comprehensive dataset
 data = {
-    "message": [
-        "Hey, how old are you?", 
-        "Let's meet in private.", 
-        "Hi, how's your day?", 
-        "Where do you go to school?",
-        "You can trust me, don’t tell anyone.",
-        "What’s your favorite video game?"
-    ],
-    "label": ["grooming", "grooming", "non-grooming", "grooming", "grooming", "non-grooming"]
+    "message_id": [],
+    "timestamp": [],
+    "sender_type": [],  # "adult" or "minor"
+    "message": [],
+    "label": []
 }
+
+# Generate timestamps (starting from 30 days ago)
+start_date = datetime.now() - timedelta(days=30)
+
+# Non-grooming messages - normal conversation
+normal_messages = [
+    "Hi, how's your day?",
+    "What's your favorite video game?",
+    "Did you watch that new movie?",
+    "How was school today?",
+    "I like that game too!",
+    "What kind of music do you listen to?",
+    "Have you seen the latest episode?",
+    "Do you play any sports?",
+    "That's cool! I used to play basketball.",
+    "What subjects do you like in school?",
+    "Did you do anything fun this weekend?",
+    "I'm going to a concert next week.",
+    "Have you tried the new pizza place?",
+    "I just got a new phone.",
+    "My dog is so funny sometimes.",
+    "What are your hobbies?",
+    "That's an interesting username!",
+    "I like your profile picture.",
+    "Are you excited for the holidays?",
+    "What games are you playing lately?"
+]
+
+# Grooming messages - showing various tactics
+grooming_messages = [
+    # Personal questions
+    "Hey, how old are you?",
+    "Where do you go to school?",
+    "Do you have a boyfriend/girlfriend?",
+    "What's your home address?",
+    "Are your parents home right now?",
+    "What's your full name?",
+    "Do you have Instagram/Snapchat? Can I add you?",
+    
+    # Isolation attempts
+    "Let's meet in private.",
+    "You can trust me, don't tell anyone.",
+    "This is just between us, okay?",
+    "Your parents wouldn't understand our friendship.",
+    "We should keep this conversation a secret.",
+    "I bet your friends would be jealous of our special connection.",
+    "You're more mature than other kids your age.",
+    
+    # Trust building
+    "I understand you better than your parents.",
+    "You can always talk to me about anything.",
+    "I feel like we have a special connection.",
+    "I'm always here for you, no matter what.",
+    "You're so mature for your age.",
+    "I've never met anyone who understands me like you do.",
+    
+    # Testing boundaries
+    "Have you ever kissed someone?",
+    "Do you know what sex is?",
+    "What do you wear to bed?",
+    "Has anyone ever seen you naked?",
+    "Would you keep a secret for someone you really trust?",
+    "Have you ever seen anything inappropriate online?",
+    
+    # Gift offering/special treatment
+    "I could buy you that game you wanted.",
+    "I'd love to send you a gift. What's your address?",
+    "If we meet, I'll bring you something special.",
+    "I can help you with money if you need it.",
+    "I know people who could help your gaming/music career.",
+    
+    # Shifting to other platforms
+    "Let's continue this conversation on Snapchat.",
+    "Can we video chat instead? It's more personal.",
+    "Give me your phone number so we can text.",
+    "This app monitors messages, let's talk somewhere else.",
+    
+    # Photo requests
+    "Can you send me a picture of yourself?",
+    "I'd love to see what you look like right now.",
+    "Send me a pic of your outfit today.",
+    "Do you have any swimming photos?",
+    "Can I see your room?"
+]
+
+# Generate 200 conversation entries
+for i in range(200):
+    data["message_id"].append(i+1)
+    
+    # Generate random timestamp within the last 30 days
+    random_days = random.randint(0, 30)
+    random_hours = random.randint(0, 23)
+    random_minutes = random.randint(0, 59)
+    msg_timestamp = start_date + timedelta(days=random_days, hours=random_hours, minutes=random_minutes)
+    data["timestamp"].append(msg_timestamp.strftime("%Y-%m-%d %H:%M:%S"))
+    
+    # Determine if this will be a grooming or non-grooming message (60/40 split for better training)
+    is_grooming = random.random() < 0.4
+    
+    if is_grooming:
+        message = random.choice(grooming_messages)
+        label = "grooming"
+        sender_type = "adult" if random.random() < 0.9 else "minor"  # Grooming messages mostly from adults
+    else:
+        message = random.choice(normal_messages)
+        label = "non-grooming"
+        sender_type = "adult" if random.random() < 0.5 else "minor"  # Normal messages from both
+    
+    data["sender_type"].append(sender_type)
+    data["message"].append(message)
+    data["label"].append(label)
 
 # Convert to DataFrame
 df = pd.DataFrame(data)
 
+# Add some conversation flow - sequential messages with appropriate timestamps
+# (This creates more realistic conversation patterns)
+convo_flows = 10
+messages_per_convo = 8
+start_idx = len(data["message_id"])
+
+for c in range(convo_flows):
+    base_timestamp = start_date + timedelta(days=random.randint(0, 30))
+    is_grooming_convo = random.random() < 0.4
+    
+    # Initial sender
+    if is_grooming_convo:
+        initial_sender = "adult"
+    else:
+        initial_sender = "adult" if random.random() < 0.5 else "minor"
+    
+    for m in range(messages_per_convo):
+        data["message_id"].append(start_idx + c*messages_per_convo + m)
+        
+        # Alternate senders to simulate conversation
+        if m % 2 == 0:
+            sender = initial_sender
+        else:
+            sender = "minor" if initial_sender == "adult" else "adult"
+        
+        data["sender_type"].append(sender)
+        
+        # Create realistic timestamp progression
+        msg_timestamp = base_timestamp + timedelta(minutes=m*3 + random.randint(0, 2))
+        data["timestamp"].append(msg_timestamp.strftime("%Y-%m-%d %H:%M:%S"))
+        
+        if is_grooming_convo:
+            # Start subtle and escalate
+            grooming_intensity = min(1.0, 0.3 + (m/messages_per_convo * 0.7))
+            
+            if sender == "adult" and random.random() < grooming_intensity:
+                message = random.choice(grooming_messages)
+                label = "grooming"
+            else:
+                message = random.choice(normal_messages)
+                label = "non-grooming" if sender == "minor" else "grooming" if random.random() < 0.3 else "non-grooming"
+        else:
+            message = random.choice(normal_messages)
+            label = "non-grooming"
+            
+        data["message"].append(message)
+        data["label"].append(label)
+
+# Create some custom, more complex examples
+complex_examples = [
+    {"sender": "adult", "message": "Hey there! Just checking in. How was school today?", "label": "non-grooming"},
+    {"sender": "minor", "message": "It was ok. Got a lot of homework though :(", "label": "non-grooming"},
+    {"sender": "adult", "message": "That sucks. Do your parents help you with homework?", "label": "grooming"},
+    {"sender": "minor", "message": "Not really. They're usually busy with work", "label": "non-grooming"},
+    {"sender": "adult", "message": "That's too bad. Are they home now? Maybe we could chat on video and I could help you", "label": "grooming"},
+    {"sender": "minor", "message": "They're not home until 6", "label": "non-grooming"},
+    {"sender": "adult", "message": "Perfect! I mean, that's cool. I can help. What's your Zoom or Skype?", "label": "grooming"},
+    
+    {"sender": "adult", "message": "Have you played the new Minecraft update?", "label": "non-grooming"},
+    {"sender": "minor", "message": "No, I don't have money to buy it :(", "label": "non-grooming"},
+    {"sender": "adult", "message": "I could buy it for you. I just need your account details", "label": "grooming"},
+    {"sender": "minor", "message": "Really? That would be awesome!", "label": "non-grooming"},
+    {"sender": "adult", "message": "Sure! I like helping cool kids like you. Just don't tell anyone, they'd get jealous", "label": "grooming"},
+]
+
+# Add the complex examples
+base_timestamp = start_date + timedelta(days=random.randint(0, 30))
+for i, ex in enumerate(complex_examples):
+    data["message_id"].append(len(data["message_id"]) + 1)
+    msg_timestamp = base_timestamp + timedelta(minutes=i*4 + random.randint(0, 3))
+    data["timestamp"].append(msg_timestamp.strftime("%Y-%m-%d %H:%M:%S"))
+    data["sender_type"].append(ex["sender"])
+    data["message"].append(ex["message"])
+    data["label"].append(ex["label"])
+
+# Convert to final DataFrame
+df = pd.DataFrame(data)
+
+# Add some contextual features that might help with classification
+def contains_personal_question(msg):
+    personal_terms = ['old', 'age', 'school', 'live', 'address', 'parents', 'home', 'alone', 'boyfriend', 'girlfriend']
+    return 1 if any(term in msg.lower() for term in personal_terms) else 0
+
+def contains_secrecy_terms(msg):
+    secrecy_terms = ['secret', 'private', 'don\'t tell', 'just between us', 'keep this', 'nobody', 'trust me']
+    return 1 if any(term in msg.lower() for term in secrecy_terms) else 0
+
+df['contains_personal_question'] = df['message'].apply(contains_personal_question)
+df['contains_secrecy_terms'] = df['message'].apply(contains_secrecy_terms)
+
 # Save to CSV
 df.to_csv("chat_data.csv", index=False)
-
-print("Sample chat_data.csv created!")
+print(f"Enhanced chat_data.csv created with {len(df)} messages!")
+print(f"Grooming messages: {len(df[df['label'] == 'grooming'])}")
+print(f"Non-grooming messages: {len(df[df['label'] == 'non-grooming'])}")

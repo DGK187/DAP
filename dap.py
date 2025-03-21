@@ -896,4 +896,27 @@ class DatabaseManager:
             SELECT id, contact_id, name, phone, platform, first_contact, last_contact, 
                   interaction_count, risk_score
             FROM contacts
-            WHERE child_i
+            WHERE child_id = ? AND risk_score >= ?
+            ORDER BY risk_score DESC
+            LIMIT ?
+            ''', (child_id, min_risk, limit))
+            
+            contacts = []
+            for row in cursor.fetchall():
+                contacts.append({
+                    'id': row[0],
+                    'contact_id': row[1],
+                    'name': row[2],
+                    'phone': row[3],
+                    'platform': row[4],
+                    'first_contact': row[5],
+                    'last_contact': row[6],
+                    'interaction_count': row[7],
+                    'risk_score': row[8]
+                })
+            
+            return contacts
+            
+        except Exception as e:
+            logger.error(f"Error getting high-risk contacts: {e}")
+            return []
